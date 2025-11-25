@@ -1,22 +1,31 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
+import { logout, signIn } from "@/lib/appwrite";
+import { toast } from '@/lib/toast';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({email: '', password: ''});
 
+  const logoff = async () => {
+    const log = logout();
+    toast("User logged off");
+  }
+
   const submit = async () => {
-    if(!form.email || !form.password) return Alert.alert('Error', 'Please enter valid email address and password!!');
+    const { email, password } = form;
+    if(!email || !password) return toast('Please enter valid email address and password!!');
     setIsSubmitting(true);
     try{
-      //call appwrite sign in function
-      Alert.alert("Success", 'User signed in successfully.');
+      await signIn({ email, password });
+      toast('User signed in successfully.');
       router.replace('/');
     } catch(error: any){
-      Alert.alert('Error', error.message);
+      console.log(error.message);
+      toast(error.message);
     } finally{
       setIsSubmitting(false);
     }
@@ -50,6 +59,10 @@ const SignIn = () => {
           Sign Up
         </Link>
       </View>
+      {/* <CustomButton 
+        title="Sign out"
+        onPress={logoff}
+      /> */}
     </View>
   );
 };
