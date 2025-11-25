@@ -1,6 +1,7 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import { createUser } from '@/lib/appwrite';
+import { toast } from '@/lib/toast';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
@@ -17,10 +18,10 @@ const SignUp = () => {
     try{
       //call appwrite sign Up function
       await createUser({ email,  password,  name });
-      Alert.alert("Success", 'User signed up successfully.');
+      toast('User signed up successfully.');
       router.replace('/');
     } catch(error: any){
-      Alert.alert('Error', error.message);
+      toast(error.message);
     } finally{
       setIsSubmitting(false);
     }
