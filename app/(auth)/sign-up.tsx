@@ -2,6 +2,7 @@ import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import { createUser } from '@/lib/appwrite';
 import { toast } from '@/lib/toast';
+import * as Sentry from '@sentry/react-native';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
@@ -22,6 +23,8 @@ const SignUp = () => {
       router.replace('/');
     } catch(error: any){
       toast(error.message);
+      Sentry.captureEvent(error);
+      
     } finally{
       setIsSubmitting(false);
     }

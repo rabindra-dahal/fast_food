@@ -1,5 +1,5 @@
 import { CreateUserParams, SignInParams } from "@/type";
-import { Account, Avatars, Client, ID, Permission, Role, TablesDB } from "react-native-appwrite";
+import { Account, Avatars, Client, ID, Permission, Query, Role, TablesDB } from "react-native-appwrite";
 
 export const appWriteConfig = {
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
@@ -54,4 +54,30 @@ export const signIn = async ({ email, password }: SignInParams) => {
 
 export const logout = async() => {
     return await account.deleteSession({ sessionId: "current" });
+}
+
+export const getCurrentUser = async () => {
+    try {
+        const currentAccount = await account.get();
+        if(!currentAccount) throw Error;
+
+        // const currentUser = await databases.listDocuments(
+        //     appWriteConfig.databaseId,
+        //     appWriteConfig.userCollectionId,
+        //     [Query.equal('accountId', currentAccount.$id)]
+        // )
+
+        const currentUser = await tablesDB.listRows({
+            databaseId: appWriteConfig.databaseId,
+            tableId: appWriteConfig.userTableId,
+            queries: [Query.equal('accountId', currentAccount.$id)]
+            });
+
+        if(!currentUser) throw Error;
+
+        return currentUser.rows.at(0);
+    } catch (e) {
+        console.log(e);
+        throw new Error(e as string);
+    }
 }

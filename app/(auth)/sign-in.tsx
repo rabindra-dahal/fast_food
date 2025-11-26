@@ -2,6 +2,7 @@ import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import { logout, signIn } from "@/lib/appwrite";
 import { toast } from '@/lib/toast';
+import * as Sentry from '@sentry/react-native';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -20,11 +21,14 @@ const SignIn = () => {
     if(!email || !password) return toast('Please enter valid email address and password!!');
     setIsSubmitting(true);
     try{
+      // const cu = await getCurrentUser();
+      // console.log("Current user ",cu);
       await signIn({ email, password });
       toast('User signed in successfully.');
       router.replace('/');
     } catch(error: any){
       console.log(error.message);
+      Sentry.captureEvent(error.message);
       toast(error.message);
     } finally{
       setIsSubmitting(false);
