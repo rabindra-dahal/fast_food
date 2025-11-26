@@ -2,9 +2,9 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from "expo-router";
 
 
+import * as Sentry from '@sentry/react-native';
 import { useEffect } from 'react';
 import "./globals.css";
-import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
   dsn: 'https://6743545477d6caec378e707cbfb68d08@o4510424308514816.ingest.de.sentry.io/4510424310874192',
@@ -37,7 +37,8 @@ export default Sentry.wrap(function RootLayout() {
   useEffect(()=>{
     if(error) throw error;
     if(fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded, error])
+  }, [fontsLoaded, error]);
+  
   return <Stack screenOptions={{
     headerShown: false,
   }} />;
