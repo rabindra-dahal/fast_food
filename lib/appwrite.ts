@@ -1,12 +1,17 @@
 import { CreateUserParams, SignInParams } from "@/type";
-import { Account, Avatars, Client, ID, Permission, Query, Role, TablesDB } from "react-native-appwrite";
+import { Account, Avatars, Client, ID, Permission, Query, Role, Storage, TablesDB } from "react-native-appwrite";
 
 export const appWriteConfig = {
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
     platform: 'com.rd.fastfood',
     databaseId: '6925836b00309a6c1302',
+    bucketId: '6926da9300066ff2015e', //asset bucket id created in storage
     userTableId: 'user',
+    categoriesTableId: 'categories',
+    menuTableId: 'menu',
+    customizationsTableId: 'customizations',
+    menu_customizationsTableId: 'menu_customizations',
 } 
 
 export const client = new Client();
@@ -18,6 +23,7 @@ client
 
 export const account = new Account(client);
 // export const databases = new Databases(client);
+export const storage = new Storage(client); // bucket storage
 
 export const tablesDB = new TablesDB(client);
 
