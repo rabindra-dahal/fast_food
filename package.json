@@ -15,7 +15,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "@sentry/react-native": "^7.7.0",
+    "@sentry/react-native": "~7.2.0",
     "babel-preset-expo": "~54.0.0",
     "clsx": "^2.1.1",
     "expo": "~54.0.25",
@@ -36,12 +36,13 @@
     "react-native": "0.81.5",
     "react-native-appwrite": "^0.18.0",
     "react-native-gesture-handler": "~2.28.0",
-    "react-native-reanimated": "~3.17.4",
-    "react-native-safe-area-context": "5.4.0",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-url-polyfill": "^3.0.0",
     "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.5.1"
+    "react-native-worklets": "0.5.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",

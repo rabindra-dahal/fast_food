@@ -61,12 +61,6 @@ export const getCurrentUser = async () => {
         const currentAccount = await account.get();
         if(!currentAccount) throw Error;
 
-        // const currentUser = await databases.listDocuments(
-        //     appWriteConfig.databaseId,
-        //     appWriteConfig.userCollectionId,
-        //     [Query.equal('accountId', currentAccount.$id)]
-        // )
-
         const currentUser = await tablesDB.listRows({
             databaseId: appWriteConfig.databaseId,
             tableId: appWriteConfig.userTableId,
@@ -75,7 +69,7 @@ export const getCurrentUser = async () => {
 
         if(!currentUser) throw Error;
 
-        return currentUser.rows.at(0);
+        return currentUser.rows[0];
     } catch (e) {
         console.log(e);
         throw new Error(e as string);
