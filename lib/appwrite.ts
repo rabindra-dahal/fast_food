@@ -1,4 +1,4 @@
-import { CreateUserParams, SignInParams } from "@/type";
+import { Category, CreateUserParams, GetMenuParams, MenuItem, SignInParams } from "@/type";
 import { Account, Avatars, Client, ID, Permission, Query, Role, Storage, TablesDB } from "react-native-appwrite";
 
 export const appWriteConfig = {
@@ -78,6 +78,38 @@ export const getCurrentUser = async () => {
         return currentUser.rows[0];
     } catch (e) {
         console.log(e);
+        throw new Error(e as string);
+    }
+}
+
+export const getMenu = async ({ category, query }: GetMenuParams) => {
+    try {
+        const queries: string[] = [];
+
+        if(category) queries.push(Query.equal('categories', category));
+        if(query) queries.push(Query.search('name', query));
+
+        const menus = await tablesDB.listRows<MenuItem>({
+            databaseId: appWriteConfig.databaseId,
+            tableId: appWriteConfig.menuTableId,
+            queries: queries
+        });
+
+        return menus.rows;
+    } catch (e) {
+        throw new Error(e as string);
+    }
+}
+
+export const getCategories = async () => {
+    try {
+        const categories = await tablesDB.listRows<Category>({
+            databaseId: appWriteConfig.databaseId,
+            tableId: appWriteConfig.categoriesTableId
+        });
+        
+        return categories.rows;
+    } catch (e) {
         throw new Error(e as string);
     }
 }
