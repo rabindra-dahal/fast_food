@@ -63,22 +63,34 @@ async function clearStorage(): Promise<void> {
 
 async function uploadImageToStorage(imageUrl: string) {
     const response = await fetch(imageUrl);
-    const blob = await response.blob();
+    const getTypeAndSize =  (resp: Response) => {
+        const resp_headers = resp.headers;
+        return {type: resp_headers.get('Content-Type'), size: resp_headers.get('content-length')};
+    }
+
+    const {type, size} = getTypeAndSize(response);
 
     const fileObj = {
         name: imageUrl.split("/").pop() || `file-${Date.now()}.jpg`,
-        type: blob.type,
-        size: blob.size,
+        type: String(type),
+        size: Number(size),
         uri: imageUrl,
     };
 
-    const file = await storage.createFile({
+    try{
+        const file = await storage.createFile({
         bucketId: appWriteConfig.bucketId,
         fileId: ID.unique(),
-        file: fileObj
-    });
+        file: fileObj,
+        permissions: ['read("any")']
+        });
+        const fileUrl = storage.getFileViewURL(appWriteConfig.bucketId, file.$id)
+        return fileUrl;
 
-    return storage.getFileViewURL(appWriteConfig.bucketId, file.$id);
+    } catch(error){
+        console.log("Error occurred while adding data in bucket ", error)
+    }
+    
 }
 
 async function seed(): Promise<void> {
@@ -119,8 +131,10 @@ async function seed(): Promise<void> {
 
     // 4. Create Menu Items
     const menuMap: Record<string, string> = {};
+
     for (const item of data.menu) {
         const uploadedImage = await uploadImageToStorage(item.image_url);
+        console.log("Uploaded image url : ", uploadedImage);
         const doc = await tablesDB.createRow({
                                 databaseId: appWriteConfig.databaseId,
                                 tableId: appWriteConfig.menuTableId,
